@@ -1,0 +1,118 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "srvcs-cardinality",
+    "description": "",
+    "license": {
+      "name": "Apache-2.0",
+      "identifier": "Apache-2.0"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [],
+        "summary": "`GET /` — service identity (srvcs service standard).",
+        "operationId": "index",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Info"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "summary": "`POST /` — the number of distinct integers in the list `values`.",
+        "description": "Reads each element as a JSON integer. If any element is not an integer the\nrequest is rejected with `422`. Otherwise the count of distinct integers is\nreturned as `result`. The empty list yields `0`.",
+        "operationId": "evaluate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EvalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardinalityResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "an element is not a valid integer"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CardinalityResponse": {
+        "type": "object",
+        "required": [
+          "values",
+          "result"
+        ],
+        "properties": {
+          "result": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "values": {
+            "type": "object"
+          }
+        }
+      },
+      "EvalRequest": {
+        "type": "object",
+        "required": [
+          "values"
+        ],
+        "properties": {
+          "values": {
+            "type": "object",
+            "description": "The list of integers to count. Every element must be a JSON integer."
+          }
+        }
+      },
+      "Info": {
+        "type": "object",
+        "required": [
+          "service",
+          "concern",
+          "depends_on"
+        ],
+        "properties": {
+          "concern": {
+            "type": "string"
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "service": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
